@@ -21,6 +21,23 @@ Front-end da aplicação gobarber, criado com a tecnologia ReactJS e com diversa
 - [Axios](https://github.com/axios/axios)
 - [Styled-Components](https://styled-components.com/)
 
+#### :zap: Como executar este projeto
+
+Para executar esse projeto, é necessário ter o projeto **Backend (API)** do gobarber, essa API foi construida com nodeJS e você pode baixar o repositório e seguir o tutorial para executar essa localmente [clicando aqui](https://github.com/jefferson1104/gobarber-nodejs).
+
+Agora que você tem o backend (API) do projeto, considerando que esta em execução e em pleno funcionamento siga as instruções abaixo:
+
+```bash
+# Acesse o diretório frontend
+$ cd gobarber-reacjs
+
+# Instale todas as dependencias do projeto
+$ yarn
+
+# Iniciar versão web (frontend) do goBarber localmente na porta 3000
+$ yarn start
+```
+
 #### 🎨 Screenshots
 
 <p align="center">
