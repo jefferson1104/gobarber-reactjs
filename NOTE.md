@@ -68,7 +68,79 @@ Vamos criar o nosso bucket, uma nota importante é que ao nomear o bucket coloqu
 Importante você ter autoridade sobre o dominio que voce vai utilizar, ou seja ele precisa ser seu, o google verifica se voce tem essa autoridade, com o usuario que você esta utilizando os serviços do google cloud plataform, acesse o o [search console](https://search.google.com/search-console/) e adicione o dominio para seu usuario utilizando um dos meios de validação, em seguida insira o dominio do seu projeto.
 ![deploy](./assets/deploy/guia-reactjs-deploy-12.png)
 
+Nesse opção eu mantive a opção com melhor custo/beneficio, a latencia é baixa para servidores na carolina do sul, você pode escolher servidores no brasil em São Paulo porém fique ciente que o custo é muito maior.
 ![deploy](./assets/deploy/guia-reactjs-deploy-13.png)
+
+Mantenha opção "**Standard**"
 ![deploy](./assets/deploy/guia-reactjs-deploy-14.png)
+
+Mantenha a opção "**Uniforme**"
 ![deploy](./assets/deploy/guia-reactjs-deploy-15.png)
+
+Mantenha opção "**Chave de criptografia gerenciada pelo Google**" e clique em "**Criar**"
 ![deploy](./assets/deploy/guia-reactjs-deploy-16.png)
+
+### Configurar contas de serviço
+
+Vamos agora configurar uma conta de serviço, ela vai servir para conseguirmos utilizar a API do google cloud plataform, dessa forma conseguimos acessar o bucket, criar arquivos, deletar arquivos e muito mais sem precisar ficar acessando a plataforma da google.
+
+Primeiro vamos navegar ate o menu "**IAM e Administrador**" em seguida no menu lateral procure por "**Contas de serviço**" e por ultimo clique no botão "**Criar conta de serviço**" no menu horizontal superior, no final voce irá chegar nesse formulário:
+![deploy](./assets/deploy/guia-reactjs-deploy-17.png)
+
+Dê um nome mais descritivel possivel, essa conta vamos utilizar no nosso gitHub Actions, depois de preencher tudo corretamente clique em "**Concluir**", após isso sua conta sera criada.
+![deploy](./assets/deploy/guia-reactjs-deploy-18.png)
+
+### Criando chave JSON (permissões)
+
+Com a conta de serviço criada vamos criar uma chave privada, siga as instruções abaixo:
+
+- Clique na sua conta de serviço
+  ![deploy](./assets/deploy/guia-reactjs-deploy-19.png)
+
+- Navegue até a guia "**CHAVES**"
+  ![deploy](./assets/deploy/guia-reactjs-deploy-20.png)
+
+- Clique no botão "**ADICIONAR CHAVE**" em seguida na opção "**Criar nova chave**"
+  ![deploy](./assets/deploy/guia-reactjs-deploy-21.png)
+
+- Escolha a opção "**JSON**" e clique em "**CRIAR**" faça o download da chave.
+  ![deploy](./assets/deploy/guia-reactjs-deploy-22.png)
+
+- Por fim a chave que voce fez download guarde ela
+  ![deploy](./assets/deploy/guia-reactjs-deploy-23.png)
+
+### Configurando a conta de serviço no bucket
+
+O primeiro passo dessa etapa é copiar o endereço da conta de serviço, faça como na imagem abaixo copie o endereço da sua conta:
+
+**ex:** *deploy-reactjs-github-actions@skilful-asset-323515.iam.gserviceaccount.com*
+
+![deploy](./assets/deploy/guia-reactjs-deploy-24.png)
+
+Agora vamos navegar até o nosso bucket, voce pode pesquisar por "**Storage**" e procurar pelo bucket que criamos, em seguida clique nele:
+![deploy](./assets/deploy/guia-reactjs-deploy-25.png)
+
+Navegue até a guia "**PERMISSÕES**"
+![deploy](./assets/deploy/guia-reactjs-deploy-26.png)
+
+Após clicar em "**PERMISSÕES**" aguarde carregar e em seguida clique no botão "**ADICIONAR**"
+![deploy](./assets/deploy/guia-reactjs-deploy-27.png)
+
+Preencha os dados como mostra a imagem abaixo, no campo "**Novos membros**" insira o endereço que copiamos da **conta de serviço**, e no campo "**Selecionar papel**" escolha a opção de **administrador de objeto de storage**.
+![deploy](./assets/deploy/guia-reactjs-deploy-28.png)
+
+### Configurando página inicial
+
+Um dos motivos para criar um bucket com o nome do dominio que vamos utilizar na aplicação é justamente para liberar esse recurso pela interface de poder escolher a pagina inicial, se tivesse criado o bucket utilizando um nome simples ao invés do dominio esse recurso não seria liberado, e ai teria que fazer isso através de linha de comando.
+
+Para configurar navegue até o nosso bucket e clique naquele menu de ações (3 pontinhos) em seguida escolha a opção "**Editar configuração de site**"
+![deploy](./assets/deploy/guia-reactjs-deploy-29.png)
+
+![deploy](./assets/deploy/guia-reactjs-deploy-30.png)
+
+Na primeira opção onde definimos a pagina inicial, utilizamos o arquivo **index.html** pois é o arquivo principal na build do react, também vamos utilizar esse mesmo index.html na opção de página de erro 404, pois como nossa aplicação foi desenvolvida com ReactJS nossas rotas são gerenciadas pelo react ao contrário de um site comum onde suas rotas são arquivos do servidor, pastas e etc... por fim clique em **salvar**.
+![deploy](./assets/deploy/guia-reactjs-deploy-31.png)
+
+Feito a configuração, nosso bucket já esta pronto, se você jogar la dentro um arquivo index.html verá que ele já está funcionando.
+
+### Workflow github actions
