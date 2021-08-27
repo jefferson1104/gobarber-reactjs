@@ -192,50 +192,63 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Pega a versão mais atualizada do código
-    - uses: actions/checkout@v2
+      # Pega a versão mais atualizada do código
+      - uses: actions/checkout@v2
 
-    # Instala a versão do node que você definir
-    - name: Setup Node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12.x
+      # Instala a versão do node que você definir
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
 
-    # Instala as dependencias do projeto
-    - name: Install dependencies
-      run: yarn install
+      # Verifica se existe auma lib nova no projeto, se não existir nada novo ele evita um yarn install
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
 
-    # Caso sua aplicação possui testes ele executa os testes, caso não tenha comente essa parte.
-    # - name: Run tests
-    #   run: yarn test --watchAll false
+      - uses: actions/cache@v2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
-    # Executa o script de build do projeto
-    - name: Build
-      run: yarn build
+      # Instala as dependencias do projeto
+      - name: Install dependencies
+        run: yarn install
 
-    # Instala o CLI do google cloud plataform.
-    - uses: google-github-actions/setup-gcloud@master
-      with:
-        version: '290.0.1'
-        project_id: ${{ secrets.GCP_PROJECT }}
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
-        export_default_credentials: true
+      # Caso sua aplicação possui testes ele executa os testes, caso não tenha comente essa parte.
+      # - name: Run tests
+      #   run: yarn test --watchAll false
 
-    # CLI Google cloud plataform: realiza o upload dos arquivos gerados na build do projeto para o bucket.
-    - name: Upload filed to bucket
-      run: gsutil -m rsync -R ./build gs://"$BUCKET"
+      # Executa o script de build do projeto
+      - name: Build
+        run: yarn build
 
-    # CLI Google cloud plataform: faz com que os arquivos fiquem com permissão para acesso publico.
-    - name: Allow public access
-      run: gsutil -m acl ch -R -u AllUsers:R gs://"$BUCKET"
+      # Instala o CLI do google cloud plataform.
+      - uses: google-github-actions/setup-gcloud@master
+        with:
+          version: '290.0.1'
+          project_id: ${{ secrets.GCP_PROJECT }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
 
-    # CLI Google cloud plataform: configura o cache de arquivos como imagens e javascript
-    - name: Set Cache-Control
-      run: gsutil -m setmeta -h "Cache-Control:public, max-age=15768000" gs://"$BUCKET"/**/*.{png,svg,css,js}
+      # CLI Google cloud plataform: realiza o upload dos arquivos gerados na build do projeto para o bucket.
+      - name: Upload filed to bucket
+        run: gsutil -m rsync -R ./build gs://"$BUCKET"
 
-    # CLI Google cloud plataform: remove o cache do arquivo index.html
-    - name: Set Cache-Control
-      run: gsutil setmeta -h "Cache-Control:no-cache, no-store" gs://"$BUCKET"/index.html
+      # CLI Google cloud plataform: faz com que os arquivos fiquem com permissão para acesso publico.
+      - name: Allow public access
+        run: gsutil -m acl ch -R -u AllUsers:R gs://"$BUCKET"
+
+      # CLI Google cloud plataform: configura o cache de arquivos como imagens e javascript
+      - name: Set Cache-Control
+        run: gsutil -m setmeta -h "Cache-Control:public, max-age=15768000" gs://"$BUCKET"/**/*.{png,svg,css,js}
+
+      # CLI Google cloud plataform: remove o cache do arquivo index.html
+      - name: Set Cache-Control
+        run: gsutil setmeta -h "Cache-Control:no-cache, no-store" gs://"$BUCKET"/index.html
 ```
 
 Para finalizar clique no botão "**Start commit**" e em seguida no botão "**Commit changes**".
@@ -250,3 +263,73 @@ Toda vez que voce fazer um commit no repositório, irá iniciar um deploy no buc
 ![deploy](./assets/deploy/guia-reactjs-deploy-40.png)
 
 ![deploy](./assets/deploy/guia-reactjs-deploy-41.png)
+
+Como fica seu bucket com os arquivos após o fim do deploy.
+![deploy](./assets/deploy/guia-reactjs-deploy-42.png)
+
+## Configurando IP fixo
+
+Precisamos agora definir um ip fixo para ficar atribuido ao nosso bucket e tambem configurar o apontamento de dominio.
+
+A primeira coisa a fazer é navegar para o "**Cloud load balancing**"
+
+![deploy](./assets/deploy/guia-reactjs-deploy-43.png)
+
+Clique no botão "**ACESSE CLOUD LOAD BALACING**"
+
+![deploy](./assets/deploy/guia-reactjs-deploy-44.png)
+
+Clique em "**Criar balanceador de carga**"
+
+![deploy](./assets/deploy/guia-reactjs-deploy-45.png)
+
+Na sessão de HTTPS clique em "**INICIAR CONFIGURAÇÃO**"
+
+![deploy](./assets/deploy/guia-reactjs-deploy-46.png)
+
+Mantenha a opção "**Da internet para minhas VMs**" e clique em "**CONTINUAR**"
+
+![deploy](./assets/deploy/guia-reactjs-deploy-47.png)
+
+Agora vamos no primeiro ponto da configuração, clique em "**Configuração de back-end**" em seguida clique no botão "**CRIAR UM BUCKET DE BACK-END**"
+
+![deploy](./assets/deploy/guia-reactjs-deploy-48.png)
+
+Preencha conforme a imagem abaixo colocando um nome, selecionando o bucket do projeto, e clique em "**CRIAR**"
+![deploy](./assets/deploy/guia-reactjs-deploy-49.png)
+
+Agora clique em "**Configuração de front-end**" a seguir a primeira opção que vamos configurar é o "**Endereço IP**" clique em "**CRIAR ENDEREÇO IP**" no final preenhca os campos e clique em "**RESERVAR**"
+
+![deploy](./assets/deploy/guia-reactjs-deploy-50.png)
+
+![deploy](./assets/deploy/guia-reactjs-deploy-51.png)
+
+Ainda em "**Configuração de front-end**" vamos criar um certificado ssl, siga as instruções como mostra na imagem abaixo, e no final clique em "**CRIAR**"
+
+![deploy](./assets/deploy/guia-reactjs-deploy-52.png)
+
+![deploy](./assets/deploy/guia-reactjs-deploy-53.png)
+
+No final clique em "**CONCLUIR**" e tambem no menu principal clique no botão azul "**CRIAR**" para criar o balancer.
+
+![deploy](./assets/deploy/guia-reactjs-deploy-54.png)
+
+![deploy](./assets/deploy/guia-reactjs-deploy-55.png)
+
+## Configurando Dominio
+
+A configuração de apontamento de dominio pode variar muito de acordo com cada situação, no meu caso basicamente eu fiz o apontamento do meu dominio utilizando os serviços do "**CloudFlare**".
+
+Acessei meu load balancer e peguei o ip fixo
+![deploy](./assets/deploy/guia-reactjs-deploy-56.png)
+![deploy](./assets/deploy/guia-reactjs-deploy-57.png)
+
+No final fiz um apontamento do dominio para este ip no meu cloudflare.
+![deploy](./assets/deploy/guia-reactjs-deploy-58.png)
+
+## CONCLUSÃO APP FUNCIONANDO!
+
+![deploy](./assets/deploy/guia-reactjs-deploy-59.png)
+Se você fez tudo conforme o tutorial ensinou sua aplicação reactjs deve estar publicada, o deploy é mais avançado e tentei detalhar o melhor possivel claro utilizando o cenário do google cloud plataform e também o meu projeto gobarber-reactjs.
+
+Lembrando que este projeto necessita de um back-end (API) para funcionar corretamente, se você deseja saber como fazer deploy de um back-end (API) feito com Node.js acesse esse [link](https://blog.soaresdev.com/deploy-nodejs-typescript/).
