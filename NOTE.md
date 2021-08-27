@@ -192,16 +192,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # aqui ele pega a versão mais atualizada do código
+    # aqui ele pega a versão mais atualizada do código
     - uses: actions/checkout@v2
 
-      # instala a versão do node que você definir
+    # instala a versão do node que você definir
     - name: Setup Node.js
       uses: actions/setup-node@v1
       with:
         node-version: 12.x
 
-     # instala as dependencias do projeto
+    # instala as dependencias do projeto
     - name: Install dependencies
       run: yarn install
 
@@ -214,7 +214,7 @@ jobs:
       run: yarn build
 
     # aqui ele instala a CLI do google cloud plataform dentro do bucket
-    - uses: GoogleCloudPlatform/github-actions/setup-gcloud@main
+    - uses: google-github-actions/setup-gcloud@master
       with:
         version: '290.0.1'
         project_id: ${{ secrets.GCP_PROJECT }}
