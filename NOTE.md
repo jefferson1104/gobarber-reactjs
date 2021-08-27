@@ -144,3 +144,32 @@ Na primeira opção onde definimos a pagina inicial, utilizamos o arquivo **inde
 Feito a configuração, nosso bucket já esta pronto, se você jogar la dentro um arquivo index.html verá que ele já está funcionando.
 
 ### Workflow github actions
+
+Vamos configurar o workflow de CI (Integração contínua), toda vez que fazemos um novo commit no repositório basicamente ele envia a build do código atualizado do projeto para a CDN (no caso no bucket do google cloud plataform).
+
+Vamos pegar o id do nosso projeto no google cloud plataform, é muito facil procure no menu horizontal superior o nome do projeto e clique nele, nesse exemplo da imagem a seguir o nome do nosso projeto é "**My First Project**" clicando nele ja podemos visualizar o **ID** do projeto que nesse exemplo é "**skilful-asset-323515**"
+![deploy](./assets/deploy/guia-reactjs-deploy-32.png)
+
+O próximo passo é ir no repositório do seu projeto lá no github, clicar em **settings** e em seguida no meu sidebar (lateral esquerda) clicar na opção **secrets**, vamos criar nossas secrets que são variaveis secretas que serão utilizadas no script de build do projeto.
+
+![deploy](./assets/deploy/guia-reactjs-deploy-33.png)
+
+Agora vamos clicar no botão "New repository secret" e vamos criar nossa primeira variável secreta, o nome será **GCP_PROJECT** onde o valor vai ser o **ID** do projeto que copiamos, e por fim clique no botão "**Add secret**".
+
+![deploy](./assets/deploy/guia-reactjs-deploy-34.png)
+
+Feito isso vamos criar outra variável secreta que terá o nome "**GCP_SA_KEY**", o valor dessa variável será o conteúdo daquele arquivo **.json** que baixamos em passos anteriores desse tutorial, temos que converter o conteúdo desse arquivo para **base64**, se você é usuario de um sistema operacional Linux ou MacOS é facil siga as instruções abaixo:
+
+```bash
+# Navegue até o local onde está o arquivo .json
+# Execute o comando:
+$ cat nome-do-arquivo.json | base64
+
+```
+
+> Ex:
+> ![deploy](./assets/deploy/guia-reactjs-deploy-35.png)
+
+Por fim crie a variável e coloque o conteúdo convertido para base64 no valor da variável, agora vamos navegar no menu "**Actions**" e criar nosso **workflow** clicando em "**set up a workflow yourself**".
+
+> ![deploy](./assets/deploy/guia-reactjs-deploy-36.png)
