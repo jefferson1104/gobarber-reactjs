@@ -35,7 +35,7 @@ jobs:
       run: yarn build
     
     # aqui ele instala a CLI do google cloud plataform dentro do bucket
-    - uses: google-github-actions/deploy-cloudrun@main
+    - uses: google-github-actions/setup-gcloud@master
       with:
         version: '290.0.1'
         project_id: ${{ secrets.GCP_PROJECT }}
