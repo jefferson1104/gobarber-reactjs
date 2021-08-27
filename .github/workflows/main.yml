@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+
+env:
+  # coloque aqui o nome do seu bucket
+  BUCKET: appreactjs.soaresdev.com
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Pega a versão mais atualizada do código
+    - uses: actions/checkout@v2
+
+    # Instala a versão do node que você definir
+    - name: Setup Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.x
+        
+    # Instala as dependencias do projeto
+    - name: Install dependencies
+      run: yarn install
+    
+    # Caso sua aplicação possui testes ele executa os testes, caso não tenha comente essa parte.
+    # - name: Run tests
+    #   run: yarn test --watchAll false
+    
+    # Executa o script de build do projeto
+    - name: Build
+      run: yarn build
+    
+    # Instala o CLI do google cloud plataform.
+    - uses: google-github-actions/setup-gcloud@master
+      with:
+        version: '290.0.1'
+        project_id: ${{ secrets.GCP_PROJECT }}
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        export_default_credentials: true
+    
+    # CLI Google cloud plataform: realiza o upload dos arquivos gerados na build do projeto para o bucket.
+    - name: Upload filed to bucket
+      run: gsutil -m rsync -R ./build gs://"$BUCKET"
+    
+    # CLI Google cloud plataform: faz com que os arquivos fiquem com permissão para acesso publico.
+    - name: Allow public access
+      run: gsutil -m acl ch -R -u AllUsers:R gs://"$BUCKET"
+    
+    # CLI Google cloud plataform: configura o cache de arquivos como imagens e javascript
+    - name: Set Cache-Control
+      run: gsutil -m setmeta -h "Cache-Control:public, max-age=15768000" gs://"$BUCKET"/**/*.{png,svg,css,js}
+
+    # CLI Google cloud plataform: remove o cache do arquivo index.html
+    - name: Set Cache-Control
+      run: gsutil setmeta -h "Cache-Control:no-cache, no-store" gs://"$BUCKET"/index.html
