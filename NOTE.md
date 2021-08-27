@@ -174,7 +174,7 @@ Por fim crie a variável e coloque o conteúdo convertido para base64 no valor d
 
 > ![deploy](./assets/deploy/guia-reactjs-deploy-36.png)
 
-Abaixo está o código do nosso workflow com as explicações nos comentarios.
+Abaixo está o código do nosso workflow com as explicações nos comentarios, copie o conteúdo abaixo e cole no lugar onde inserir o workflow.
 
 ```bash
 name: CI
@@ -238,4 +238,7 @@ jobs:
       run: gsutil setmeta -h "Cache-Control:no-cache, no-store" gs://"$BUCKET"/index.html
 ```
 
-Copie todo o código acima cole no
+Para finalizar clique no botão "**Start commit**" e em seguida no botão "**Commit changes**".
+![deploy](./assets/deploy/guia-reactjs-deploy-37.png)
+
+Toda vez que voce fazer um commit no repositório, irá iniciar um deploy no bucket, você pode acompanhar esse workflow na sessão "Actions" como mostra a imagem abaixo:
