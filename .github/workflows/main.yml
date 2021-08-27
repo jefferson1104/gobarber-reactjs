@@ -13,47 +13,60 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Pega a versão mais atualizada do código
-    - uses: actions/checkout@v2
+      # Pega a versão mais atualizada do código
+      - uses: actions/checkout@v2
 
-    # Instala a versão do node que você definir
-    - name: Setup Node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12.x
-        
-    # Instala as dependencias do projeto
-    - name: Install dependencies
-      run: yarn install
-    
-    # Caso sua aplicação possui testes ele executa os testes, caso não tenha comente essa parte.
-    # - name: Run tests
-    #   run: yarn test --watchAll false
-    
-    # Executa o script de build do projeto
-    - name: Build
-      run: yarn build
-    
-    # Instala o CLI do google cloud plataform.
-    - uses: google-github-actions/setup-gcloud@master
-      with:
-        version: '290.0.1'
-        project_id: ${{ secrets.GCP_PROJECT }}
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
-        export_default_credentials: true
-    
-    # CLI Google cloud plataform: realiza o upload dos arquivos gerados na build do projeto para o bucket.
-    - name: Upload filed to bucket
-      run: gsutil -m rsync -R ./build gs://"$BUCKET"
-    
-    # CLI Google cloud plataform: faz com que os arquivos fiquem com permissão para acesso publico.
-    - name: Allow public access
-      run: gsutil -m acl ch -R -u AllUsers:R gs://"$BUCKET"
-    
-    # CLI Google cloud plataform: configura o cache de arquivos como imagens e javascript
-    - name: Set Cache-Control
-      run: gsutil -m setmeta -h "Cache-Control:public, max-age=15768000" gs://"$BUCKET"/**/*.{png,svg,css,js}
+      # Instala a versão do node que você definir
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
 
-    # CLI Google cloud plataform: remove o cache do arquivo index.html
-    - name: Set Cache-Control
-      run: gsutil setmeta -h "Cache-Control:no-cache, no-store" gs://"$BUCKET"/index.html
+      # Verifica se existe auma lib nova no projeto, se não existir nada novo ele evita um yarn install
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      # Instala as dependencias do projeto
+      - name: Install dependencies
+        run: yarn install
+
+      # Caso sua aplicação possui testes ele executa os testes, caso não tenha comente essa parte.
+      # - name: Run tests
+      #   run: yarn test --watchAll false
+
+      # Executa o script de build do projeto
+      - name: Build
+        run: yarn build
+
+      # Instala o CLI do google cloud plataform.
+      - uses: google-github-actions/setup-gcloud@master
+        with:
+          version: '290.0.1'
+          project_id: ${{ secrets.GCP_PROJECT }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      # CLI Google cloud plataform: realiza o upload dos arquivos gerados na build do projeto para o bucket.
+      - name: Upload filed to bucket
+        run: gsutil -m rsync -R ./build gs://"$BUCKET"
+
+      # CLI Google cloud plataform: faz com que os arquivos fiquem com permissão para acesso publico.
+      - name: Allow public access
+        run: gsutil -m acl ch -R -u AllUsers:R gs://"$BUCKET"
+
+      # CLI Google cloud plataform: configura o cache de arquivos como imagens e javascript
+      - name: Set Cache-Control
+        run: gsutil -m setmeta -h "Cache-Control:public, max-age=15768000" gs://"$BUCKET"/**/*.{png,svg,css,js}
+
+      # CLI Google cloud plataform: remove o cache do arquivo index.html
+      - name: Set Cache-Control
+        run: gsutil setmeta -h "Cache-Control:no-cache, no-store" gs://"$BUCKET"/index.html
