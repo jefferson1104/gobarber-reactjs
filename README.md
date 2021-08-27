@@ -6,7 +6,7 @@
   <img alt="technology" src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB">
 </p>
 
-#### :barber: O projeto
+## :barber: O projeto
 
 Front-end da aplicação gobarber, criado com a tecnologia ReactJS e com diversas bibliotecas.
 
@@ -14,14 +14,14 @@ Front-end da aplicação gobarber, criado com a tecnologia ReactJS e com diversa
   <img src="./assets/images/preview.gif" alt="preview"/>
 </div>
 
-#### :rocket: Principais tecnologias
+## :rocket: Principais tecnologias
 
 - [TypeScript](https://www.typescriptlang.org/docs/)
 - [ReactJS](https://pt-br.reactjs.org/)
 - [Axios](https://github.com/axios/axios)
 - [Styled-Components](https://styled-components.com/)
 
-#### :zap: Como executar este projeto
+## :zap: Como executar este projeto
 
 Para executar esse projeto, é necessário ter o projeto **Backend (API)** do gobarber, essa API foi construida com nodeJS e você pode baixar o repositório e seguir o tutorial para executar essa localmente [clicando aqui](https://github.com/jefferson1104/gobarber-nodejs).
 
@@ -38,7 +38,7 @@ $ yarn
 $ yarn start
 ```
 
-#### 🎨 Screenshots
+## 🎨 Screenshots
 
 <p align="center">
   <a href='./assets/images/screenshots/'>
