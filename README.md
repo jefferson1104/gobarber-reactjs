@@ -1,51 +1,45 @@
 <div align="center" style="margin-bottom: 20px;">
   <img alt="gobarber" src="./assets/images/goBarber-logo.svg" width="auto" heigth="auto"/>
+  <p align="center" style="margin-top: 20px;">
+    <img alt="technology" src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white">
+    <img alt="technology" src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB">
+    <img alt="technology" src="https://img.shields.io/badge/styled--components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white">
+  </p>
 </div>
 
-<p align="center">
-  <img alt="technology" src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB">
-</p>
-
-## :barber: O projeto
-
-Front-end da aplicação gobarber, criado com a tecnologia ReactJS e com diversas bibliotecas.
+# :barber: About this project
+Front-end of the gobarber application, created with ReactJS technology and several libraries.
 
 <div align="center">
   <img src="./assets/images/preview.gif" alt="preview"/>
 </div>
 
-## :rocket: Principais tecnologias
-
+# :rocket: Main technologies
 - [TypeScript](https://www.typescriptlang.org/docs/)
 - [ReactJS](https://pt-br.reactjs.org/)
 - [Axios](https://github.com/axios/axios)
 - [Styled-Components](https://styled-components.com/)
 
-## :zap: Como executar este projeto
+# :zap: How to run this project
+To run this project, you need gobarber's **Backend (API)** project, this API was built with nodeJS and you can download the repository and follow the tutorial to run this locally [by clicking here](https:// github.com/jefferson1104/gobarber-nodejs).
 
-Para executar esse projeto, é necessário ter o projeto **Backend (API)** do gobarber, essa API foi construida com nodeJS e você pode baixar o repositório e seguir o tutorial para executar essa localmente [clicando aqui](https://github.com/jefferson1104/gobarber-nodejs).
-
-Agora que você tem o backend (API) do projeto, considerando que esta em execução e em pleno funcionamento siga as instruções abaixo:
+Now that you have the backend (API) of the project, considering it is up and running, follow the instructions below:
 
 ```bash
-# Acesse o diretório frontend
+# Access the front-end directory
 $ cd gobarber-reacjs
 
-# Instale todas as dependencias do projeto
+# Install all project dependencies
 $ yarn
 
-# Iniciar versão web (frontend) do goBarber localmente na porta 3000
+# Launch web version (frontend) of goBarber locally on port 3000
 $ yarn start
 ```
 
-## 🎨 Screenshots
+# 🎨 Screenshots
 
-<p align="center">
+<div align="center">
   <a href='./assets/images/screenshots/'>
     <img width=600 src="./assets/images/gobarber-screens.png">
   </a>
-</p>
-
-### :memo: Licença
-
-Este projeto é desenvolvido sob a licença MIT. Veja o arquivo [LICENSE](LICENSE.md) para saber mais detalhes.
+</div>
