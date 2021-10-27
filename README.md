@@ -1,4 +1,5 @@
 <div align="center" style="margin-bottom: 20px;">
+  <h1 align="center">FRONT-END (WEB)</h1>
   <img alt="gobarber" src="./assets/images/goBarber-logo.svg" width="auto" heigth="auto"/>
   <p align="center" style="margin-top: 20px;">
     <img alt="technology" src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white">
